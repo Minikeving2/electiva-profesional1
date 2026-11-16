@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modelos de Transformación Empresarial | Guía Académica Unisimón</title>
+  <meta name="description" content="Guía académica interactiva y minimalista del Proyecto Integrador: Pasado → Presente → Futuro. Ingeniería de Sistemas, Universidad Simón Bolívar.">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/image1.png">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Lienzo dinámico de movimiento fluido continuo entre verde y blanco -->
+  <canvas id="ambient-canvas" class="ambient-fluid-canvas" aria-hidden="true"></canvas>
+
+  <!-- =========================================================
+       SIDEBAR IZQUIERDO DE NAVEGACIÓN (LIMPIO Y SIN REDUNDANCIAS)
+       ========================================================= -->
+  <aside class="app-sidebar">
+    <div class="sidebar-header">
+      <img src="assets/logo_unisimon_trans.png" alt="Universidad Simón Bolívar" class="sidebar-logo">
+      <span class="sidebar-brand-title">Ingeniería de Sistemas</span>
+      <span class="sidebar-brand-sub">Modelos de Transformación</span>
+    </div>
+
+    <!-- Navegación por Módulos -->
+    <nav class="sidebar-nav" aria-label="Menú del Proyecto">
+      
+      <span class="nav-section-label">General</span>
+      <button class="nav-item-btn active" data-target="view-resumen">
+        <div class="nav-item-left">
+          <span>📌</span>
+          <span class="nav-label">Resumen Ejecutivo</span>
+        </div>
+      </button>
+
+      <button class="nav-item-btn" data-target="view-momentos">
+        <div class="nav-item-left">
+          <span>⏱️</span>
+          <span class="nav-label">Los 3 Momentos</span>
+        </div>
+        <span class="nav-item-badge">Roadmap</span>
+      </button>
+
+      <span class="nav-section-label">Cortes del Semestre</span>
+      <button class="nav-item-btn" data-target="view-parcial1">
+        <div class="nav-item-left">
+          <span>🎯</span>
+          <span class="nav-label">Corte 1: Pasado</span>
+        </div>
+        <span class="nav-item-badge">5-7 min</span>
+      </button>
+
+      <button class="nav-item-btn" data-target="view-corte2">
+        <div class="nav-item-left">
+          <span>🔍</span>
+          <span class="nav-label">Corte 2: Presente</span>
+        </div>
+        <span class="nav-item-badge" style="background: #e0f2fe; color: #0369a1;">10-15 min</span>
+      </button>
+
+      <button class="nav-item-btn" data-target="view-corte3">
+        <div class="nav-item-left">
+          <span>🚀</span>
+          <span class="nav-label">Corte 3: Futuro</span>
+        </div>
+        <span class="nav-item-badge" style="background: #fef3c7; color: #92400e;">15-20 min</span>
+      </button>
+
+      <span class="nav-section-label">Evaluación & Normas</span>
+      <button class="nav-item-btn" data-target="view-rubrica">
+        <div class="nav-item-left">
+          <span>⚖️</span>
+          <span class="nav-label">Rúbrica de Evaluación</span>
+        </div>
+      </button>
+
+      <button class="nav-item-btn" data-target="view-checklist">
+        <div class="nav-item-left">
+          <span>✅</span>
+          <span class="nav-label">Checklist Corte 1</span>
+        </div>
+        <span id="nav-checklist-badge" class="nav-item-badge">0/10</span>
+      </button>
+
+      <button class="nav-item-btn" data-target="view-reglas">
+        <div class="nav-item-left">
+          <span>📜</span>
+          <span class="nav-label">Reglas del Proyecto</span>
+        </div>
+      </button>
+
+      <span class="nav-section-label">Gestión Docente</span>
+      <button class="nav-item-btn" data-target="view-admin">
+        <div class="nav-item-left">
+          <span>⚙️</span>
+          <span class="nav-label">Panel Administrador</span>
+        </div>
+        <span class="nav-item-badge" style="background: rgba(9, 132, 59, 0.15); color: var(--usb-green); font-weight: 700;">Docente</span>
+      </button>
+    </nav>
+
+    <!-- Sidebar Footer Limpio (Sin cajas duplicadas) -->
+    <div class="sidebar-footer">
+      <div class="sidebar-bottom-actions">
+        <span style="font-size: 0.72rem; color: var(--text-muted);">Sedes Barranquilla & Cúcuta</span>
+        <button id="theme-toggle" class="btn-icon-top" title="Cambiar Tema" aria-label="Modo de color">
+          <span id="theme-icon">🌙</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- =========================================================
+       ÁREA PRINCIPAL DE CONTENIDO
+       ========================================================= -->
+  <div class="app-main">
+    
+    <!-- Header Superior Flotante -->
+    <header class="top-header">
+      <div class="top-header-left">
+        <button class="mobile-menu-btn" aria-label="Menú">☰</button>
+        <div class="breadcrumb-trail">
+          <span>MTE</span>
+          <span>/</span>
+          <span id="breadcrumb-current" class="breadcrumb-active">Resumen Ejecutivo</span>
+        </div>
+      </div>
+
+      <div class="top-header-actions">
+        <a href="assets/Proyecto_Integrador_Pasado_Presente_Futuro_Modelos_Transformacion_Empresarial.docx" download="Proyecto_Integrador_Pasado_Presente_Futuro_Modelos_Transformacion_Empresarial.docx" class="btn-clean header-download-btn" style="text-decoration: none; padding: 7px 18px; font-size: 0.82rem;" title="Descargar documento">
+          <span>📥 Descargar Documento</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Contenedor de Vistas -->
+    <main class="content-wrapper">
+
+      <!-- =====================================================
+           VISTA 1: RESUMEN EJECUTIVO (HERO LIMPIO)
+           ===================================================== -->
+      <section id="view-resumen" class="view-panel active">
+        
+        <div class="clean-hero">
+          <div class="clean-hero-tags">
+            <span class="hero-tag gold">PROYECTO INTEGRADOR</span>
+            <span class="hero-tag">INGENIERÍA DE SISTEMAS</span>
+            <span class="hero-tag">UNISIMÓN</span>
+          </div>
+
+          <h1 class="clean-hero-title">Modelos de Transformación Empresarial</h1>
+          
+          <p class="clean-hero-subtitle">
+            De la investigación empresarial a la propuesta de transformación estratégica: <strong>Pasado → Presente → Futuro</strong>.
+          </p>
+
+          <div class="hero-pills-row">
+            <div class="hero-pill-box">
+              <span class="pill-box-icon">🏢</span>
+              <div>
+                <div class="pill-box-title">1 Empresa Real</div>
+                <div class="pill-box-desc">La misma del Taller 3 durante todo el semestre</div>
+              </div>
+            </div>
+
+            <div class="hero-pill-box">
+              <span class="pill-box-icon">📈</span>
+              <div>
+                <div class="pill-box-title">3 Cortes Evolutivos</div>
+                <div class="pill-box-desc">Un solo caso que madura corte tras corte</div>
+              </div>
+            </div>
+
+            <div class="hero-pill-box">
+              <span class="pill-box-icon">🎬</span>
+              <div>
+                <div class="pill-box-title">Doble Producto</div>
+                <div class="pill-box-desc">Video audiovisual + Propuesta escrita formal</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-teacher-strip">
+            <img src="assets/image1.png" alt="Sistemas" class="teacher-pic">
+            <div class="teacher-details-clean">
+              <span>Docente Titular</span>
+              <strong>M.Sc. I.S. Alvaro Salamanca Landínez</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Frase Orientadora -->
+        <div class="quote-banner">
+          <p>«No se trata solamente de estudiar lo que una empresa hizo. Se trata de comprender por qué cambió, imaginar qué habríamos hecho nosotros, evaluar lo que ocurrió y, finalmente, ser capaces de proponer hacia dónde debería transformarse.»</p>
+          <span class="quote-banner-author">— Principio Orientador del Proyecto</span>
+        </div>
+
+        <!-- Principio de Evolución -->
+        <div class="section-title-wrap">
+          <span class="section-tag-small">Fundamento</span>
+          <h2 class="section-heading">¿Cómo Funciona el Proyecto Integrador?</h2>
+          <p class="section-subtext">No son tres trabajos aislados. Es un único caso empresarial que se irá construyendo, profundizando y transformando durante el semestre:</p>
+        </div>
+
+        <div class="principles-grid">
+          <div class="principle-clean-card">
+            <div class="principle-num">01. PASADO</div>
+            <h4>Punto de Partida</h4>
+            <p>El primer parcial establece la situación histórica y formula una propuesta de transformación desde el pasado («si hubiéramos estado allí…»).</p>
+          </div>
+
+          <div class="principle-clean-card">
+            <div class="principle-num">02. PRESENTE</div>
+            <h4>Contraste Real</h4>
+            <p>El segundo parcial permite volver al presente, contrastar lo propuesto con lo que verdaderamente ocurrió e incorporar nuevos conceptos.</p>
+          </div>
+
+          <div class="principle-clean-card">
+            <div class="principle-num">03. FUTURO</div>
+            <h4>Proyección Prospectiva</h4>
+            <p>El examen final permite proyectar una transformación futura con mayor profundidad, creatividad y solidez técnica.</p>
+          </div>
+
+          <div class="principle-clean-card">
+            <div class="principle-num">04. CALIDAD CRECIENTE</div>
+            <h4>Progresión Integral</h4>
+            <p>La calidad visual, narrativa, conceptual y técnica deberá crecer de forma sustancial de un corte al siguiente.</p>
+          </div>
+
+          <div class="principle-clean-card">
+            <div class="principle-num">05. NUEVOS MODELOS</div>
+            <h4>Integración Continua</h4>
+            <p>Durante el semestre aparecerán nuevos temas y herramientas que deberán incorporarse progresivamente al caso.</p>
+          </div>
+        </div>
+
+        <div class="bottom-flow-nav">
+          <div></div>
+          <button class="btn-clean primary" data-goto="view-momentos">
+            <span>Ver los 3 Momentos</span>
+            <span>→</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- =====================================================
+           VISTA 2: LOS TRES MOMENTOS (ROADMAP GLOBAL)
+           ===================================================== -->
+      <section id="view-momentos" class="view-panel">
+        <div class="section-title-wrap">
+          <span class="section-tag-small">Evolución Curricular</span>
+          <h2 class="section-heading">La Lógica del Proyecto: Tres Momentos</h2>
+          <p class="section-subtext">El estudiante asume progresivamente el rol de consultor y analista estratégico de transformación organizacional:</p>
+        </div>
+
+        <div class="moments-roadmap">
+          
+          <!-- Pasado -->
+          <div class="moment-clean-card active-phase">
+            <span class="phase-chip c-pasado">Primer Parcial · Corte 1</span>
+            <h3 class="moment-name">PASADO</h3>
+            <div class="moment-duration-tag">⏱️ 5 a 7 minutos (Obligatorio)</div>
+            
+            <div class="moment-block-title">Pregunta Central</div>
+            <p class="moment-question-text">¿Qué estaba ocurriendo y qué habríamos hecho nosotros?</p>
+            
+            <div class="moment-role-pill">
+              <span class="moment-block-title">Rol:</span>
+              Consultores antes de la transformación
+            </div>
+
+            <ul class="moment-items-ul">
+              <li>Video ejecutivo-creativo (5-7 min)</li>
+              <li>Propuesta escrita formal de respaldo</li>
+              <li>Diagnóstico del contexto histórico</li>
+              <li>Respuestas a las 5 preguntas clave</li>
+            </ul>
+
+            <button class="btn-clean primary" style="margin-top: 1rem; width: 100%; justify-content: center;" data-goto="view-parcial1">
+              Ver Guía Corte 1 →
+            </button>
+          </div>
+
+          <!-- Presente -->
+          <div class="moment-clean-card">
+            <span class="phase-chip c-presente">Segundo Parcial · Corte 2</span>
+            <h3 class="moment-name">PRESENTE</h3>
+            <div class="moment-duration-tag">⏱️ 10 a 15 minutos (Orientativo)</div>
+            
+            <div class="moment-block-title">Pregunta Central</div>
+            <p class="moment-question-text">¿Qué ocurrió realmente y dónde está hoy?</p>
+            
+            <div class="moment-role-pill" style="border-left-color: #0284c7;">
+              <span class="moment-block-title">Rol:</span>
+              Analistas que contrastan la realidad
+            </div>
+
+            <ul class="moment-items-ul">
+              <li>Producto audiovisual ampliado (10-15 min)</li>
+              <li>Documento de contrastación con la realidad</li>
+              <li>Aciertos, diferencias y oportunidades no previstas</li>
+              <li>Nuevos modelos teóricos integrados</li>
+            </ul>
+
+            <button class="btn-clean blue" style="margin-top: 1rem; width: 100%; justify-content: center;" data-goto="view-corte2">
+              Ver Guía Corte 2 →
+            </button>
+          </div>
+
+          <!-- Futuro -->
+          <div class="moment-clean-card">
+            <span class="phase-chip c-futuro">Examen Final · Corte 3</span>
+            <h3 class="moment-name">FUTURO</h3>
+            <div class="moment-duration-tag">⏱️ 15 a 20 minutos (Orientativo)</div>
+            
+            <div class="moment-block-title">Pregunta Central</div>
+            <p class="moment-question-text">¿Hacia dónde debería transformarse en el futuro?</p>
+            
+            <div class="moment-role-pill" style="border-left-color: #d97706;">
+              <span class="moment-block-title">Rol:</span>
+              Consultores estratégicos del futuro
+            </div>
+
+            <ul class="moment-items-ul">
+              <li>Producto final integrador culminante</li>
+              <li>Propuesta prospectiva de transformación</li>
+              <li>Demostración de viabilidad e impacto</li>
+              <li>Producto significativamente superior</li>
+            </ul>
+
+            <button class="btn-clean gold" style="margin-top: 1rem; width: 100%; justify-content: center;" data-goto="view-corte3">
+              Ver Guía Corte 3 →
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Matriz de Progresión -->
+        <div class="section-title-wrap">
+          <span class="section-tag-small">Comparativa</span>
+          <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary);">Matriz de Progresión Dimensional</h3>
+        </div>
+
+        <div class="clean-table-box">
+          <table class="clean-table">
+            <thead>
+              <tr>
+                <th>Dimensión</th>
+                <th>Primer Parcial (Pasado)</th>
+                <th>Segundo Parcial (Presente)</th>
+                <th>Examen Final (Futuro)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Análisis</strong></td>
+                <td>Comprender pasado y detectar necesidad.</td>
+                <td>Contrastar y evaluar transformación real.</td>
+                <td>Diseñar y justificar próxima transformación.</td>
+              </tr>
+              <tr>
+                <td><strong>Conceptos</strong></td>
+                <td>Fundamentos ya estudiados.</td>
+                <td>Nuevos temas incorporados.</td>
+                <td>Integración total de aprendizajes.</td>
+              </tr>
+              <tr>
+                <td><strong>Creatividad</strong></td>
+                <td>Narrativa y audiovisual dinámico.</td>
+                <td>Mayor profundidad visual y argumentativa.</td>
+                <td>Producto integrador de nivel superior.</td>
+              </tr>
+              <tr>
+                <td><strong>Tiempo de Video</strong></td>
+                <td><span style="font-family: var(--font-mono); font-weight: 700; color: var(--usb-green);">5–7 min (Obligatorio)</span></td>
+                <td><span style="font-family: var(--font-mono); font-weight: 700; color: #0284c7;">10–15 min (Orientativo)</span></td>
+                <td><span style="font-family: var(--font-mono); font-weight: 700; color: #d97706;">15–20 min (Orientativo)</span></td>
+              </tr>
+              <tr>
+                <td><strong>Rol Asumido</strong></td>
+                <td>Consultor antes del cambio.</td>
+                <td>Analista de la realidad.</td>
+                <td>Consultor estratégico del futuro.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="bottom-flow-nav">
+          <button class="btn-clean" data-goto="view-resumen">
+            <span>← Resumen Ejecutivo</span>
+          </button>
+          <button class="btn-clean primary" data-goto="view-parcial1">
+            <span>Guía Corte 1 (Pasado) →</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- =====================================================
+           VISTA UNIFICADA: PRIMER PARCIAL — CORTE 1 (PASADO)
+           (INCLUYE DIAGNÓSTICO, PREGUNTAS, PROPUESTA Y GUIÓN DEL VIDEO)
+           ===================================================== -->
+      <section id="view-parcial1" class="view-panel">
+        <div class="section-title-wrap">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 0.35rem;">
+            <span class="section-tag-small">Primer Parcial · Corte 1</span>
+            <span class="nav-item-badge" style="background: var(--usb-green-subtle); color: var(--usb-green);">Duración Video: 5 a 7 min</span>
+          </div>
+          <h2 class="section-heading">Corte 1 — PASADO: «Si hubiéramos estado allí…»</h2>
+          <p class="section-subtext">El grupo viaja imaginariamente al pasado antes de la transformación relevante y asume el rol de consultores contratados por la dirección:</p>
+        </div>
+
+        <!-- Hecho Real vs Análisis vs Propuesta -->
+        <div class="triad-clean-wrap">
+          <div class="triad-clean-item t-real">
+            <span style="font-size: 0.68rem; font-weight: 800; color: #0284c7; text-transform: uppercase;">1. Hecho Real</span>
+            <h4>Información Histórica</h4>
+            <p>Datos comprobables sobre la empresa en la época seleccionada: operaciones, clientes y modelo.</p>
+            <div class="triad-code-box">
+              «En el 2005 la empresa dependía de puntos físicos y registraba pedidos en papel.»
+            </div>
+          </div>
+
+          <div class="triad-clean-item t-ana">
+            <span style="font-size: 0.68rem; font-weight: 800; color: #7c3aed; text-transform: uppercase;">2. Análisis</span>
+            <h4>Interpretación Crítica</h4>
+            <p>Diagnóstico fundamentado del grupo sobre cuellos de botella y amenazas competitivas.</p>
+            <div class="triad-code-box">
+              «La gestión manual causaba demoras del 40% frente a competidores emergentes.»
+            </div>
+          </div>
+
+          <div class="triad-clean-item t-prop">
+            <span style="font-size: 0.68rem; font-weight: 800; color: var(--usb-green); text-transform: uppercase;">3. Propuesta</span>
+            <h4>Solución Hipotética</h4>
+            <p>Solución formulada por el grupo como consultores: qué transformarían y cómo generarían valor.</p>
+            <div class="triad-code-box">
+              «Proponemos implementar una plataforma ERP integrada con canal B2B omnicanal.»
+            </div>
+          </div>
+        </div>
+
+        <!-- 5 Preguntas Fundamentales -->
+        <div class="section-title-wrap">
+          <span class="section-tag-small">Preguntas Guía</span>
+          <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary);">Las 5 Preguntas Fundamentales a Responder</h3>
+        </div>
+
+        <div class="questions-clean-grid">
+          <div class="q-clean-card">
+            <div class="q-badge-num">1</div>
+            <div>
+              <h4>¿Cuál era la situación antes de la transformación?</h4>
+              <p>Diagnóstico del modelo de negocio, procesos operativos, clientes y forma en que creaba y entregaba valor.</p>
+            </div>
+          </div>
+
+          <div class="q-clean-card">
+            <div class="q-badge-num">2</div>
+            <div>
+              <h4>¿Cuál era el principal problema u oportunidad?</h4>
+              <p>Identificar con fuentes y hechos verificables el punto de quiebre que amenazaba su competitividad.</p>
+            </div>
+          </div>
+
+          <div class="q-clean-card">
+            <div class="q-badge-num">3</div>
+            <div>
+              <h4>¿Qué transformación propondríamos como consultores?</h4>
+              <p>Qué transformarían y cómo, qué recursos requeriría y con qué propósito estratégico.</p>
+            </div>
+          </div>
+
+          <div class="q-clean-card">
+            <div class="q-badge-num">4</div>
+            <div>
+              <h4>¿Por qué es transformación y no solo tecnología?</h4>
+              <p>Demostrar cómo trasciende la simple digitalización de herramientas y reconfigura procesos y personas.</p>
+            </div>
+          </div>
+
+          <div class="q-clean-card" style="grid-column: 1 / -1;">
+            <div class="q-badge-num">5</div>
+            <div>
+              <h4>¿Cómo cambiaría la forma de crear, entregar y capturar valor?</h4>
+              <p>Impacto en la propuesta al cliente (crear valor), en la eficiencia y canales (entregar valor) y en ingresos y sostenibilidad (capturar valor).</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- GUIÓN AUDIOVISUAL INTEGRADO EN CORTE 1 -->
+        <div class="section-title-wrap" style="margin-top: 2.5rem;">
+          <span class="section-tag-small">Producto 1 · Audiovisual</span>
+          <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary);">Guión y Estructura del Video (5 a 7 Minutos)</h3>
+          <p class="section-subtext">Estructura minuto a minuto para el video ejecutivo-creativo dirigido a la dirección de la empresa:</p>
+        </div>
+
+        <div class="video-timeline-wrapper">
+          <div class="duration-alert-clean">
+            <div>
+              <strong>⚠️ REGLA OBLIGATORIA DE DURACIÓN:</strong>
+              El video debe durar entre <strong>5 y 7 minutos</strong>. Menos de 5 minutos se considerará incompleto independientemente de su calidad.
+            </div>
+            <span style="font-family: var(--font-mono); font-weight: 800; font-size: 0.95rem; white-space: nowrap;">5:00 – 7:00</span>
+          </div>
+
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.75rem;">Haz clic en cada tramo de la barra de 7 minutos para revisar qué debe contener:</p>
+
+          <div class="timeline-bar-clean">
+            <div class="t-clean-seg tcs-1 active" data-index="0">0:00 - 1:00<br>Pasado</div>
+            <div class="t-clean-seg tcs-2" data-index="1">1:00 - 2:00<br>Quiebre</div>
+            <div class="t-clean-seg tcs-3" data-index="2">2:00 - 3:45<br>Propuesta</div>
+            <div class="t-clean-seg tcs-4" data-index="3">3:45 - 5:30<br>Justificación</div>
+            <div class="t-clean-seg tcs-5" data-index="4">5:30 - 7:00<br>Futuro</div>
+          </div>
+
+          <div class="timeline-time-ruler">
+            <span>0:00</span>
+            <span>1:00</span>
+            <span>2:00</span>
+            <span>3:45</span>
+            <span>5:30</span>
+            <span>7:00 Max</span>
+          </div>
+
+          <div class="t-clean-detail-box">
+            <span id="vt-badge" class="t-clean-badge">0:00 – 1:00</span>
+            <h4 id="vt-title" class="t-clean-title">EL PASADO: El Punto de Partida Histórico</h4>
+            <p id="vt-body" class="t-clean-body">
+              Presentar la situación de la empresa antes de la transformación: modelo de negocio tradicional, quiénes eran sus clientes, cómo operaban sus procesos y cuál era su forma histórica de generar valor.
+            </p>
+            <div id="vt-tip" class="t-clean-tip">
+              💡 Tip: Enfóquense en el modelo tradicional y la cultura operativa del periodo seleccionado en el Taller 3.
+            </div>
+          </div>
+        </div>
+
+        <!-- Formatos Creativos («Tipo TikTok») -->
+        <div class="section-title-wrap" style="margin-top: 1.5rem;">
+          <span class="section-tag-small">Creatividad Audiovisual</span>
+          <h4 style="font-size: 1.05rem; font-weight: 700; color: var(--text-primary);">¿Qué significa «Tipo TikTok»?</h4>
+          <p class="section-subtext">Significa comunicación ágil, dinámica y visual; no significa copiar bailes ni modas vacías. Formatos recomendados:</p>
+        </div>
+
+        <div class="principles-grid" style="margin-bottom: 2.5rem;">
+          <div class="principle-clean-card">
+            <span style="font-size: 1.3rem;">👔</span>
+            <h4 style="margin-top: 6px;">Pitch ante Junta Directiva</h4>
+            <p>Simular una sesión ejecutiva ante los socios o la presidencia de la empresa.</p>
+          </div>
+
+          <div class="principle-clean-card">
+            <span style="font-size: 1.3rem;">🎙️</span>
+            <h4 style="margin-top: 6px;">Noticiero Empresarial</h4>
+            <p>Reportaje periodístico que investiga el antes y después de la organización.</p>
+          </div>
+
+          <div class="principle-clean-card">
+            <span style="font-size: 1.3rem;">🚨</span>
+            <h4 style="margin-top: 6px;">Reunión de Crisis</h4>
+            <p>Dramatización del punto de quiebre donde se contratan los consultores.</p>
+          </div>
+
+          <div class="principle-clean-card">
+            <span style="font-size: 1.3rem;">🎞️</span>
+            <h4 style="margin-top: 6px;">Mini Documental</h4>
+            <p>Narrativa histórica profunda apoyada en material gráfico y audiovisual.</p>
+          </div>
+
+          <div class="principle-clean-card">
+            <span style="font-size: 1.3rem;">⏳</span>
+            <h4 style="margin-top: 6px;">Viaje en el Tiempo</h4>
+            <p>El grupo viaja al año del pasado para asesorar a la gerencia sobre disrupciones.</p>
+          </div>
+
+          <div class="principle-clean-card">
+            <span style="font-size: 1.3rem;">📊</span>
+            <h4 style="margin-top: 6px;">Gráficos & Modelos Propios</h4>
+            <p>Infografías dinámicas, esquemas de procesos y diagramas bien explicados.</p>
+          </div>
+        </div>
+
+        <!-- 10 Componentes de la Propuesta Escrita -->
+        <div class="section-title-wrap">
+          <span class="section-tag-small">Producto 2 · Documento Escrito</span>
+          <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary);">Estructura de la Propuesta Escrita (10 Componentes Mínimos)</h3>
+          <p class="section-subtext">La propuesta escrita funciona como respaldo formal y verificable del trabajo realizado (no es una transcripción del video):</p>
+        </div>
+
+        <div class="accordion-clean-list">
+          <div class="acc-clean-row open">
+            <div class="acc-clean-head">
+              <div class="acc-left-meta">
+                <span class="acc-num-tag">01</span>
+                <span class="acc-label-title">Identificación de la empresa y momento histórico seleccionado</span>
+              </div>
+              <span class="acc-arrow">▼</span>
+            </div>
+            <div class="acc-clean-content">
+              Nombre de la empresa (del Taller 3), sector económico, año o periodo de análisis y justificación de por qué se eligió ese momento específico como punto de partida.
+            </div>
+          </div>
+
+          <div class="acc-clean-row">
+            <div class="acc-clean-head">
+              <div class="acc-left-meta">
+                <span class="acc-num-tag">02</span>
+                <span class="acc-label-title">Contexto de la empresa antes de la transformación</span>
+              </div>
+              <span class="acc-arrow">▼</span>
+            </div>
+            <div class="acc-clean-content">
+              Descripción de la organización en su estado original: modelo operativo, estructura, clientes clave y capacidades técnicas iniciales.
+            </div>
+          </div>
+
+          <div class="acc-clean-row">
+            <div class="acc-clean-head">
+              <div class="acc-left-meta">
+                <span class="acc-num-tag">03</span>
+                <span class="acc-label-title">Problema, necesidad, amenaza u oportunidad identificada</span>
+              </div>
+              <span class="acc-arrow">▼</span>
+            </div>
+            <div class="acc-clean-content">
+              Diagnóstico de la tensión o quiebre estratégico. Variables del entorno competitivo o interno que demandaban una transformación inmediata.
+            </div>
+          </div>
+
+          <div class="acc-clean-row">
+            <div class="acc-clean-head">
+              <div class="acc-left-meta">
+                <span class="acc-num-tag">04</span>
+                <span class="acc-label-title">Evidencias y fuentes que sustentan el análisis</span>
+              </div>
+              <span class="acc-arrow">▼</span>
+            </div>
+            <div class="acc-clean-content">
+              Datos, balances históricos, reportes de prensa, declaraciones de directivos, estudios sectoriales o fuentes confiables que sustentan los hechos descritos.
+            </div>
+          </div>
+
+          <div class="acc-clean-row">
+            <div class="acc-clean-head">
+              <div class="acc-left-meta">
+                <span class="acc-num-tag">05</span>
+                <span class="acc-label-title">Respuesta argumentada a las cinco preguntas del primer parcial</span>
+              </div>
+              <span class="acc-arrow">▼</span>
+            </div>
+            <div class="acc-clean-content">
+              Desarrollo conceptual y argumentado de cada una de las 5 preguntas centrales establecidas por la asignatura.
+            </div>
+          </div>
+
+          <div class="acc-clean-row">
+            <div class="acc-clean-head">
+              <div class="acc-left-meta">
+                <span class="acc-num-tag">06</span>
+                <span class="acc-label-title">Propuesta de transformación: qué, cómo, propósito e impacto</span>
+              </div>
+              <span class="acc-arrow">▼</span>
+            </div>
+            <div class="acc-clean-content">
+              Plan maestro de intervención consultora: qué cambios específicos se introducen, metodología, propósito estratégico y métricas esperadas.
+            </div>
+          </div>
+
+          <div class="acc-clean-row">
+            <div class="acc-clean-head">
+              <div class="acc-left-meta">
+                <span class="acc-num-tag">07</span>
+                <span class="acc-label-title">Justificación de transformación digital o empresarial</span>
+              </div>
+              <span class="acc-arrow">▼</span>
+            </div>
+            <div class="acc-clean-content">
+              Argumentación teórica demostrando que no se trata de una simple automatización o compra de software, sino de una reconfiguración de capacidades.
+            </div>
+          </div>
+
+          <div class="acc-clean-row">
+            <div class="acc-clean-head">
+              <div class="acc-left-meta">
+                <span class="acc-num-tag">08</span>
+                <span class="acc-label-title">Impacto esperado sobre los 6 ejes clave</span>
+              </div>
+              <span class="acc-arrow">▼</span>
+            </div>
+            <div class="acc-clean-content">
+              Detalle del impacto en: 1) Tecnología, 2) Procesos, 3) Personas, 4) Clientes, 5) Estrategia y 6) Creación/captura de valor.
+            </div>
+          </div>
+
+          <div class="acc-clean-row">
+            <div class="acc-clean-head">
+              <div class="acc-left-meta">
+                <span class="acc-num-tag">09</span>
+                <span class="acc-label-title">Conclusiones del estudio</span>
+              </div>
+              <span class="acc-arrow">▼</span>
+            </div>
+            <div class="acc-clean-content">
+              Síntesis de aprendizajes, viabilidad estratégica de la propuesta formulada y lecciones extraídas de este primer corte.
+            </div>
+          </div>
+
+          <div class="acc-clean-row">
+            <div class="acc-clean-head">
+              <div class="acc-left-meta">
+                <span class="acc-num-tag">10</span>
+                <span class="acc-label-title">Referencias bibliográficas y fuentes utilizadas</span>
+              </div>
+              <span class="acc-arrow">▼</span>
+            </div>
+            <div class="acc-clean-content">
+              Listado completo bajo normas académicas con enlaces funcionales a las fuentes consultadas.
+            </div>
+          </div>
+        </div>
+
+        <!-- Material de Apoyo y Descargables del Corte 1 -->
+        <div class="module-support-box" id="student-support-module-1">
+          <div class="module-support-head">
+            <div class="module-support-title">
+              <span class="support-icon">📂</span>
+              <div>
+                <h3>Material de Apoyo y Contenido Descargable · Corte 1</h3>
+                <p>Archivos, guías y plantillas oficiales publicadas por el docente para el desarrollo del primer corte.</p>
+              </div>
+            </div>
+            <span class="support-badge green">Corte 1 · Pasado</span>
+          </div>
+          <div class="support-files-grid" id="files-list-student-1">
+            <!-- Archivos dinámicos gestionados por el docente -->
+          </div>
+        </div>
+
+        <div class="bottom-flow-nav">
+          <button class="btn-clean" data-goto="view-momentos">
+            <span>← Los 3 Momentos</span>
+          </button>
+          <button class="btn-clean blue" data-goto="view-corte2">
+            <span>Corte 2: Presente (10-15 min) →</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- =====================================================
+           VISTA: SEGUNDO PARCIAL — CORTE 2 (PRESENTE)
+           ===================================================== -->
+      <section id="view-corte2" class="view-panel">
+        <div class="section-title-wrap">
+          <span class="section-tag-small" style="color: var(--corte2-blue);">Corte 2 · Segundo Parcial</span>
+          <h2 class="section-heading">SEGUNDO PARCIAL — PRESENTE: «¿Qué ocurrió realmente?»</h2>
+          <p class="section-subtext">El grupo regresa del pasado al presente de la empresa para contrastar lo hipotético con la realidad histórica:</p>
+        </div>
+
+        <div class="corte-spotlight-card blue-theme">
+          <div class="spotlight-top-badge badge-corte2">
+            <span>🔍</span>
+            <span>Momento 2: Evaluación & Contraste</span>
+          </div>
+
+          <h3 style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--text-primary); margin-bottom: 0.35rem;">
+            De la Propuesta Imaginada a la Realidad de la Empresa
+          </h3>
+
+          <div class="spotlight-duration-pill" style="background: #e0f2fe; color: #0369a1;">
+            ⏱️ Duración Audiovisual Orientativa: 10 a 15 minutos
+          </div>
+
+          <p style="font-size: 0.92rem; color: var(--text-secondary); line-height: 1.55;">
+            En este segundo corte, el grupo regresará al presente de la empresa seleccionada en el Taller 3. Deberá analizar qué ocurrió realmente en la historia de la organización, contrastarlo con la propuesta que formularon en el primer parcial e incorporar los nuevos temas y modelos teóricos desarrollados en clase.
+          </p>
+
+          <div class="spotlight-meta-grid">
+            <div class="spotlight-meta-box">
+              <h5>Rol del Estudiante</h5>
+              <p>Analistas que contrastan la realidad</p>
+            </div>
+
+            <div class="spotlight-meta-box">
+              <h5>Pregunta Central</h5>
+              <p>¿Qué ocurrió realmente y dónde está hoy?</p>
+            </div>
+
+            <div class="spotlight-meta-box">
+              <h5>Entregables Obligatorios</h5>
+              <p>Video ampliado (10-15 min) + Documento formal de contraste</p>
+            </div>
+          </div>
+
+          <h4 style="font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin: 1.5rem 0 0.85rem;">
+            Objetivos y Misiones del Segundo Parcial:
+          </h4>
+
+          <div class="principles-grid">
+            <div class="principle-clean-card" style="border-left: 3px solid var(--corte2-blue);">
+              <h4>1. Contrastar con la Realidad</h4>
+              <p>Comparar la propuesta hipotética del primer parcial con la transformación real que efectivamente ejecutó la empresa.</p>
+            </div>
+
+            <div class="principle-clean-card" style="border-left: 3px solid var(--corte2-blue);">
+              <h4>2. Aciertos y Brechas</h4>
+              <p>Identificar coincidencias, diferencias, aciertos del grupo y oportunidades que el mercado no previó.</p>
+            </div>
+
+            <div class="principle-clean-card" style="border-left: 3px solid var(--corte2-blue);">
+              <h4>3. Nuevos Conceptos</h4>
+              <p>Incorporar los nuevos conceptos, modelos y marcos teóricos explicados en el aula durante el corte.</p>
+            </div>
+
+            <div class="principle-clean-card" style="border-left: 3px solid var(--corte2-blue);">
+              <h4>4. Profundización Holística</h4>
+              <p>Profundizar en tecnología, procesos, personas, clientes, estrategia, capacidades dinámicas y creación de valor.</p>
+            </div>
+
+            <div class="principle-clean-card" style="border-left: 3px solid var(--corte2-blue);">
+              <h4>5. Madurez Audiovisual</h4>
+              <p>Elevar el nivel narrativo, visual y técnico audiovisual acorde al incremento de tiempo (10 a 15 min).</p>
+            </div>
+          </div>
+
+          <div class="teacher-note-callout note-c2">
+            <strong style="color: var(--corte2-blue); display: block; margin-bottom: 2px;">📌 Criterio Oficial del Documento:</strong>
+            «Las preguntas y criterios específicos del segundo parcial se definirán posteriormente, de acuerdo con el avance real de la asignatura.»
+          </div>
+        </div>
+
+        <!-- Material de Apoyo y Descargables del Corte 2 -->
+        <div class="module-support-box" id="student-support-module-2">
+          <div class="module-support-head">
+            <div class="module-support-title">
+              <span class="support-icon" style="background: rgba(2, 132, 199, 0.1); color: var(--corte2-blue);">📂</span>
+              <div>
+                <h3>Material de Apoyo y Contenido Descargable · Corte 2</h3>
+                <p>Archivos, guías y casos de estudio compartidos por el docente para el segundo parcial.</p>
+              </div>
+            </div>
+            <span class="support-badge blue">Corte 2 · Presente</span>
+          </div>
+          <div class="support-files-grid" id="files-list-student-2">
+            <!-- Archivos dinámicos gestionados por el docente -->
+          </div>
+        </div>
+
+        <div class="bottom-flow-nav">
+          <button class="btn-clean primary" data-goto="view-parcial1">
+            <span>← Corte 1: Pasado</span>
+          </button>
+          <button class="btn-clean gold" data-goto="view-corte3">
+            <span>Corte 3: Futuro (15-20 min) →</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- =====================================================
+           VISTA: EXAMEN FINAL — CORTE 3 (FUTURO)
+           ===================================================== -->
+      <section id="view-corte3" class="view-panel">
+        <div class="section-title-wrap">
+          <span class="section-tag-small" style="color: var(--corte3-gold);">Corte 3 · Examen Final</span>
+          <h2 class="section-heading">EXAMEN FINAL — FUTURO: «¿Cuál debería ser la próxima transformación?»</h2>
+          <p class="section-subtext">El grupo utiliza todo el conocimiento construido durante el semestre para proyectar una transformación estratégica hacia el futuro:</p>
+        </div>
+
+        <div class="corte-spotlight-card gold-theme">
+          <div class="spotlight-top-badge badge-corte3">
+            <span>🚀</span>
+            <span>Momento 3: Visión Prospectiva & Transformación Futura</span>
+          </div>
+
+          <h3 style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--text-primary); margin-bottom: 0.35rem;">
+            El Producto Integrador Culminante del Semestre
+          </h3>
+
+          <div class="spotlight-duration-pill" style="background: #fef3c7; color: #92400e;">
+            ⏱️ Duración Audiovisual Orientativa: 15 a 20 minutos
+          </div>
+
+          <p style="font-size: 0.92rem; color: var(--text-secondary); line-height: 1.55;">
+            El grupo utilizará todo el conocimiento construido durante el semestre para proyectar una transformación futura de la empresa. La expectativa institucional es que el producto final sea <strong>significativamente superior</strong> a los productos de los primeros cortes tanto en profundidad conceptual como en calidad técnica.
+          </p>
+
+          <div class="spotlight-meta-grid">
+            <div class="spotlight-meta-box">
+              <h5>Rol del Estudiante</h5>
+              <p>Consultores estratégicos del futuro</p>
+            </div>
+
+            <div class="spotlight-meta-box">
+              <h5>Pregunta Central</h5>
+              <p>¿Hacia dónde debería transformarse en el futuro?</p>
+            </div>
+
+            <div class="spotlight-meta-box">
+              <h5>Entregables Obligatorios</h5>
+              <p>Producto final integrador (15-20 min) + Sustentación prospectiva</p>
+            </div>
+          </div>
+
+          <h4 style="font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin: 1.5rem 0 0.85rem;">
+            Objetivos y Misiones del Examen Final:
+          </h4>
+
+          <div class="principles-grid">
+            <div class="principle-clean-card" style="border-left: 3px solid var(--corte3-gold);">
+              <h4>1. Partir de la Situación Actual</h4>
+              <p>Analizar la situación presente y la posición competitiva que la empresa ocupa hoy en el mercado global.</p>
+            </div>
+
+            <div class="principle-clean-card" style="border-left: 3px solid var(--corte3-gold);">
+              <h4>2. Detectar Retos Futuros</h4>
+              <p>Identificar un reto emergente, ventana de oportunidad o disrupción tecnológica y social hacia adelante.</p>
+            </div>
+
+            <div class="principle-clean-card" style="border-left: 3px solid var(--corte3-gold);">
+              <h4>3. Mayor Profundidad</h4>
+              <p>Diseñar una propuesta de transformación de mayor envergadura, rigurosidad metodológica y ambición estratégica.</p>
+            </div>
+
+            <div class="principle-clean-card" style="border-left: 3px solid var(--corte3-gold);">
+              <h4>4. Integración Total</h4>
+              <p>Integrar de forma armónica todas las herramientas, modelos y marcos aprendidos a lo largo de la materia.</p>
+            </div>
+
+            <div class="principle-clean-card" style="border-left: 3px solid var(--corte3-gold);">
+              <h4>5. Viabilidad y Valor</h4>
+              <p>Demostrar viabilidad económica y técnica, innovación real, impacto positivo y creación sostenible de valor.</p>
+            </div>
+          </div>
+
+          <div class="teacher-note-callout note-c3">
+            <strong style="color: var(--corte3-gold); display: block; margin-bottom: 2px;">📌 Criterio Oficial del Documento:</strong>
+            «El producto específico del examen final NO se revela en esta etapa. Se construirá progresivamente con los temas que se incorporen durante el semestre.»
+          </div>
+        </div>
+
+        <!-- Material de Apoyo y Descargables del Corte 3 -->
+        <div class="module-support-box" id="student-support-module-3">
+          <div class="module-support-head">
+            <div class="module-support-title">
+              <span class="support-icon" style="background: rgba(217, 119, 6, 0.1); color: var(--corte3-gold);">📂</span>
+              <div>
+                <h3>Material de Apoyo y Contenido Descargable · Corte 3</h3>
+                <p>Archivos y formatos estratégicos suministrados por el docente para el examen final.</p>
+              </div>
+            </div>
+            <span class="support-badge gold">Corte 3 · Futuro</span>
+          </div>
+          <div class="support-files-grid" id="files-list-student-3">
+            <!-- Archivos dinámicos gestionados por el docente -->
+          </div>
+        </div>
+
+        <div class="bottom-flow-nav">
+          <button class="btn-clean blue" data-goto="view-corte2">
+            <span>← Corte 2: Presente</span>
+          </button>
+          <button class="btn-clean primary" data-goto="view-rubrica">
+            <span>Rúbrica & Simulador →</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- =====================================================
+           VISTA 5: RÚBRICA GENERAL DE EVALUACIÓN (SOLO RÚBRICA)
+           ===================================================== -->
+      <section id="view-rubrica" class="view-panel">
+        <div class="section-title-wrap">
+          <span class="section-tag-small">Calificación Oficial</span>
+          <h2 class="section-heading">Rúbrica General de Evaluación</h2>
+          <p class="section-subtext">Criterios institucionales y pesos porcentuales de referencia aplicados para evaluar tanto el producto audiovisual como la propuesta escrita:</p>
+        </div>
+
+        <!-- Alerta Informativa de los dos componentes -->
+        <div class="quote-banner" style="margin-bottom: 1.5rem; background: var(--bg-surface);">
+          <p>«En cada corte se entregarán dos componentes: <strong>(1) un producto audiovisual</strong>, cuya duración aumentará progresivamente, y <strong>(2) una propuesta escrita</strong> que documente y sustente el trabajo. El incremento de tiempo no implica simplemente "hablar más", sino presentar mayor profundidad, evidencia, integración conceptual y calidad de propuesta.»</p>
+          <span class="quote-banner-author">— Pauta Evaluativa de la Asignatura</span>
+        </div>
+
+        <!-- Tabla Completa de Rúbrica -->
+        <div class="rubric-table-card" style="margin-bottom: 2rem;">
+          <table class="clean-table">
+            <thead>
+              <tr>
+                <th style="width: 25%;">Criterio Evaluado</th>
+                <th style="width: 60%;">Qué se espera</th>
+                <th style="width: 15%; text-align: right;">Peso %</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Investigación y evidencia</strong></td>
+                <td>Fuentes pertinentes, confiables y suficientes; evidencia sólida para sustentar las afirmaciones realizadas.</td>
+                <td style="text-align: right; font-family: var(--font-mono); font-weight: 800; color: var(--usb-green); font-size: 1rem;">15%</td>
+              </tr>
+              <tr>
+                <td><strong>Comprensión del contexto empresarial</strong></td>
+                <td>Situación de la empresa, problema estructural, ventana de oportunidad y análisis del entorno competitivo.</td>
+                <td style="text-align: right; font-family: var(--font-mono); font-weight: 800; color: var(--usb-green); font-size: 1rem;">15%</td>
+              </tr>
+              <tr>
+                <td><strong>Análisis de la transformación</strong></td>
+                <td>Qué cambió, por qué, cómo se implementó y qué dimensiones organizacionales fueron afectadas.</td>
+                <td style="text-align: right; font-family: var(--font-mono); font-weight: 800; color: var(--usb-green); font-size: 1rem;">20%</td>
+              </tr>
+              <tr>
+                <td><strong>Aplicación conceptual</strong></td>
+                <td>Uso correcto, riguroso y articulado de los conceptos, marcos y modelos teóricos de la asignatura.</td>
+                <td style="text-align: right; font-family: var(--font-mono); font-weight: 800; color: var(--usb-green); font-size: 1rem;">15%</td>
+              </tr>
+              <tr>
+                <td><strong>Propuesta de transformación</strong></td>
+                <td>Coherencia con el diagnóstico, pertinencia, grado de innovación, viabilidad técnica e impacto real.</td>
+                <td style="text-align: right; font-family: var(--font-mono); font-weight: 800; color: var(--usb-green); font-size: 1rem;">20%</td>
+              </tr>
+              <tr>
+                <td><strong>Comunicación y creatividad</strong></td>
+                <td>Estructura narrativa, claridad ejecutiva, recursos audiovisuales dinámicos y calidad visual del video.</td>
+                <td style="text-align: right; font-family: var(--font-mono); font-weight: 800; color: var(--usb-green); font-size: 1rem;">10%</td>
+              </tr>
+              <tr>
+                <td><strong>Trabajo en equipo y dominio</strong></td>
+                <td>Participación equilibrada de todos los miembros y conocimiento real del caso por todo el grupo.</td>
+                <td style="text-align: right; font-family: var(--font-mono); font-weight: 800; color: var(--usb-green); font-size: 1rem;">5%</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr style="background: var(--bg-subtle);">
+                <td colspan="2" style="font-weight: 800; color: var(--text-primary); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.05em;">Total Ponderación del Corte</td>
+                <td style="text-align: right; font-family: var(--font-mono); font-weight: 800; color: var(--usb-green); font-size: 1.15rem;">100%</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div class="bottom-flow-nav">
+          <button class="btn-clean gold" data-goto="view-corte3">
+            <span>← Corte 3: Futuro</span>
+          </button>
+          <button class="btn-clean primary" data-goto="view-checklist">
+            <span>Checklist Corte 1 →</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- =====================================================
+           VISTA 6: CHECKLIST DE ENTREGA (CORTE 1)
+           ===================================================== -->
+      <section id="view-checklist" class="view-panel">
+        <div class="section-title-wrap">
+          <span class="section-tag-small">Autoevaluación · Corte 1</span>
+          <h2 class="section-heading">Checklist del Primer Parcial</h2>
+          <p class="section-subtext">Marca cada punto antes de realizar la entrega oficial. Tu progreso queda guardado automáticamente en tu navegador:</p>
+        </div>
+
+        <div class="checklist-modern-card">
+          <div class="checklist-top-stats">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <div id="donut-progress" class="checklist-donut" style="--progress: 0;">
+                <div class="donut-inner">
+                  <span id="donut-pct-text">0%</span>
+                </div>
+              </div>
+              <div>
+                <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-primary);">Estado de Preparación</h3>
+                <span id="donut-count-text" style="font-size: 0.82rem; color: var(--text-muted);">0 de 10 completados</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 6px;">
+              <button id="btn-clean-checkall" class="btn-clean primary">Marcar Todos</button>
+              <button id="btn-clean-reset" class="btn-clean">Reiniciar</button>
+            </div>
+          </div>
+
+          <div class="clean-check-item">
+            <div class="clean-box"></div>
+            <div>
+              <div class="clean-check-title">1. Investigación Histórica Previa</div>
+              <div class="clean-check-sub">Investigamos la situación histórica antes de una transformación relevante.</div>
+            </div>
+          </div>
+
+          <div class="clean-check-item">
+            <div class="clean-box"></div>
+            <div>
+              <div class="clean-check-title">2. Identificación del Problema con Evidencia</div>
+              <div class="clean-check-sub">Identificamos un problema, necesidad, amenaza u oportunidad respaldado en hechos.</div>
+            </div>
+          </div>
+
+          <div class="clean-check-item">
+            <div class="clean-box"></div>
+            <div>
+              <div class="clean-check-title">3. Propuesta de Consultoría Formulada</div>
+              <div class="clean-check-sub">Explicamos qué habríamos propuesto si hubiésemos sido contratados como consultores.</div>
+            </div>
+          </div>
+
+          <div class="clean-check-item">
+            <div class="clean-box"></div>
+            <div>
+              <div class="clean-check-title">4. Impacto en los 6 Ejes Clave</div>
+              <div class="clean-check-sub">Relacionamos la propuesta con tecnología, procesos, personas, clientes, estrategia y valor.</div>
+            </div>
+          </div>
+
+          <div class="clean-check-item">
+            <div class="clean-box"></div>
+            <div>
+              <div class="clean-check-title">5. Justificación de Transformación vs. Tecnología</div>
+              <div class="clean-check-sub">Justificamos por qué la propuesta constituye transformación y no simple digitalización.</div>
+            </div>
+          </div>
+
+          <div class="clean-check-item">
+            <div class="clean-box"></div>
+            <div>
+              <div class="clean-check-title">6. Diferenciación de Hechos, Análisis y Propuesta</div>
+              <div class="clean-check-sub">Garantizamos que la propuesta hipotética no se confunda con los hechos históricos reales.</div>
+            </div>
+          </div>
+
+          <div class="clean-check-item">
+            <div class="clean-box"></div>
+            <div>
+              <div class="clean-check-title">7. Duración Estricta del Video (5 a 7 min)</div>
+              <div class="clean-check-sub">El video dura entre 5:00 y 7:00 minutos exactos (videos menores de 5 min son incompletos).</div>
+            </div>
+          </div>
+
+          <div class="clean-check-item">
+            <div class="clean-box"></div>
+            <div>
+              <div class="clean-check-title">8. Formato Audiovisual Dinámico & Profesional</div>
+              <div class="clean-check-sub">El formato es ágil («tipo TikTok»), profesional y está al servicio del caso.</div>
+            </div>
+          </div>
+
+          <div class="clean-check-item">
+            <div class="clean-box"></div>
+            <div>
+              <div class="clean-check-title">9. Dominio Integral por Todos los Miembros</div>
+              <div class="clean-check-sub">Todos los integrantes conocen el contenido y están listos para sustentar.</div>
+            </div>
+          </div>
+
+          <div class="clean-check-item">
+            <div class="clean-box"></div>
+            <div>
+              <div class="clean-check-title">10. Fuentes Bibliográficas Verificables</div>
+              <div class="clean-check-sub">El documento escrito contiene todas las referencias verificables y evidencias académicas.</div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="bottom-flow-nav">
+          <button class="btn-clean" data-goto="view-rubrica">
+            <span>← Rúbrica & Simulador</span>
+          </button>
+          <button class="btn-clean primary" data-goto="view-reglas">
+            <span>Reglas del Proyecto →</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- =====================================================
+           VISTA 7: REGLAS DEL PROYECTO & COMPETENCIAS
+           ===================================================== -->
+      <section id="view-reglas" class="view-panel">
+        <div class="section-title-wrap">
+          <span class="section-tag-small">Normativa Institucional</span>
+          <h2 class="section-heading">Las 8 Reglas de Oro del Proyecto</h2>
+          <p class="section-subtext">Normas metodológicas y éticas de cumplimiento obligatorio durante todo el semestre:</p>
+        </div>
+
+        <div class="principles-grid">
+          <div class="principle-clean-card" style="border-left: 3px solid var(--usb-green);">
+            <div class="principle-num">REGLA 1</div>
+            <h4>Misma Empresa Todo el Semestre</h4>
+            <p>La empresa será la misma durante todo el proyecto, salvo autorización del docente.</p>
+          </div>
+
+          <div class="principle-clean-card" style="border-left: 3px solid var(--usb-green);">
+            <div class="principle-num">REGLA 2</div>
+            <h4>Punto de Partida: Taller 3</h4>
+            <p>El trabajo parte obligatoriamente de la investigación realizada en el Taller 3.</p>
+          </div>
+
+          <div class="principle-clean-card" style="border-left: 3px solid var(--usb-green);">
+            <div class="principle-num">REGLA 3</div>
+            <h4>Sustentación con Fuentes</h4>
+            <p>Toda afirmación sobre hechos históricos debe poder sustentarse en una fuente verificable.</p>
+          </div>
+
+          <div class="principle-clean-card" style="border-left: 3px solid var(--usb-green);">
+            <div class="principle-num">REGLA 4</div>
+            <h4>Diferenciación Estricta</h4>
+            <p>La propuesta hipotética debe diferenciarse claramente de los hechos reales de la empresa.</p>
+          </div>
+
+          <div class="principle-clean-card" style="border-left: 3px solid var(--usb-green);">
+            <div class="principle-num">REGLA 5</div>
+            <h4>Propósito Visual</h4>
+            <p>No se evaluará la cantidad de efectos especiales, sino su aporte real a la comunicación.</p>
+          </div>
+
+          <div class="principle-clean-card" style="border-left: 3px solid var(--usb-green);">
+            <div class="principle-num">REGLA 6</div>
+            <h4>Dominio Colectivo & Individual</h4>
+            <p>Todos los integrantes deben conocer y dominar el caso ante preguntas y sustentaciones.</p>
+          </div>
+
+          <div class="principle-clean-card" style="border-left: 3px solid var(--usb-green);">
+            <div class="principle-num">REGLA 7</div>
+            <h4>Uso Ético de la IA</h4>
+            <p>La IA, si se utiliza, no reemplaza la investigación, el análisis ni la autoría intelectual del grupo.</p>
+          </div>
+
+          <div class="principle-clean-card" style="border-left: 3px solid var(--usb-green);">
+            <div class="principle-num">REGLA 8</div>
+            <h4>Cumplimiento de Pautas</h4>
+            <p>Las instrucciones de duración (5-7 min), formato y fechas deberán cumplirse con exactitud.</p>
+          </div>
+        </div>
+
+        <div class="section-title-wrap" style="margin-top: 2rem;">
+          <span class="section-tag-small">Resultados de Aprendizaje</span>
+          <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary);">Competencias Profesionales que Desarrollarás</h3>
+        </div>
+
+        <div class="principles-grid">
+          <div class="principle-clean-card">
+            <span style="font-size: 1.3rem;">🔎</span>
+            <h4 style="margin-top: 4px;">Investigación con Evidencia</h4>
+            <p>Sustentar afirmaciones con datos y fuentes confiables sobre empresas reales.</p>
+          </div>
+
+          <div class="principle-clean-card">
+            <span style="font-size: 1.3rem;">🧠</span>
+            <h4 style="margin-top: 4px;">Pensamiento Analítico</h4>
+            <p>Identificar causas raíz, cuellos de botella y oportunidades estratégicas.</p>
+          </div>
+
+          <div class="principle-clean-card">
+            <span style="font-size: 1.3rem;">⚙️</span>
+            <h4 style="margin-top: 4px;">Enfoque Multidimensional</h4>
+            <p>Articular tecnología, procesos, personas, clientes, estrategia y valor.</p>
+          </div>
+
+          <div class="principle-clean-card">
+            <span style="font-size: 1.3rem;">🧭</span>
+            <h4 style="margin-top: 4px;">Visión Prospectiva</h4>
+            <p>Comprender el pasado, interpretar el presente y proyectar el futuro.</p>
+          </div>
+
+          <div class="principle-clean-card">
+            <span style="font-size: 1.3rem;">🎬</span>
+            <h4 style="margin-top: 4px;">Comunicación Ejecutiva</h4>
+            <p>Presentar ante directores con claridad, síntesis y calidad audiovisual.</p>
+          </div>
+
+          <div class="principle-clean-card">
+            <span style="font-size: 1.3rem;">🤝</span>
+            <h4 style="margin-top: 4px;">Trabajo Colaborativo</h4>
+            <p>Coordinación armónica y dominio integral del caso por cada estudiante.</p>
+          </div>
+        </div>
+
+        <div class="bottom-flow-nav">
+          <button class="btn-clean" data-goto="view-checklist">
+            <span>← Checklist Corte 1</span>
+          </button>
+          <button class="btn-clean primary" data-goto="view-resumen">
+            <span>Volver al Resumen Ejecutivo ↑</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- =====================================================
+           VISTA: PANEL ADMINISTRADOR DOCENTE (SUBIDA DE ARCHIVOS)
+           ===================================================== -->
+      <section id="view-admin" class="view-panel">
+        <div class="section-title-wrap">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+            <span class="section-tag-small" style="color: var(--usb-green); background: var(--usb-green-subtle); border-color: var(--usb-green-border);">
+              Gestión Docente · Acceso Administrativo
+            </span>
+            <div class="admin-docente-badge">
+              <span>👨‍🏫</span>
+              <span>Docente: <strong>M.Sc. Alvaro Salamanca Landínez</strong></span>
+            </div>
+          </div>
+          <h2 class="section-heading">Panel de Administración de Recursos de Apoyo</h2>
+          <p class="section-subtext">
+            Adjunta y publica material complementario, guías de trabajo, plantillas y casos de estudio para cada uno de los 3 módulos del proyecto. Los archivos subidos estarán disponibles de inmediato para su descarga por parte de los estudiantes.
+          </p>
+        </div>
+
+        <!-- Selector de Módulo -->
+        <div class="admin-module-tabs">
+          <button class="admin-module-tab active" data-mod="1">
+            <span class="tab-indicator green"></span>
+            <div>
+              <div class="tab-title">Módulo 1: Pasado</div>
+              <div class="tab-sub">Primer Parcial · Video 5-7 min</div>
+            </div>
+          </button>
+          <button class="admin-module-tab" data-mod="2">
+            <span class="tab-indicator blue"></span>
+            <div>
+              <div class="tab-title">Módulo 2: Presente</div>
+              <div class="tab-sub">Segundo Parcial · Video 10-15 min</div>
+            </div>
+          </button>
+          <button class="admin-module-tab" data-mod="3">
+            <span class="tab-indicator gold"></span>
+            <div>
+              <div class="tab-title">Módulo 3: Futuro</div>
+              <div class="tab-sub">Examen Final · Video 15-20 min</div>
+            </div>
+          </button>
+        </div>
+
+        <!-- Tarjeta de Gestión del Módulo Activo -->
+        <div class="admin-manage-card">
+          <div class="admin-card-header">
+            <div>
+              <h3 id="admin-module-current-title">Archivos de Apoyo · Módulo 1 (Corte 1: Pasado)</h3>
+              <p id="admin-module-current-desc" class="admin-card-sub">Publica y administra los documentos que los estudiantes podrán descargar en la vista del Corte 1.</p>
+            </div>
+            <span id="admin-module-badge" class="support-badge green">Módulo 1 Activo</span>
+          </div>
+
+          <!-- Formulario de Subida -->
+          <form id="admin-upload-form" class="admin-upload-form">
+            <div class="admin-dropzone" id="admin-dropzone">
+              <input type="file" id="admin-file-input" style="display: none;">
+              <div class="dropzone-icon">☁️</div>
+              <div class="dropzone-text">
+                <strong>Arrastra tu archivo aquí</strong> o <span class="dropzone-browse-link">haz clic para examinar</span>
+              </div>
+              <div class="dropzone-hint">
+                Formatos soportados: Word (.docx), PDF (.pdf), Excel (.xlsx), PowerPoint (.pptx), ZIP e imágenes.
+              </div>
+              <div id="selected-file-preview" class="selected-file-preview" style="display: none;">
+                <span class="file-preview-icon">📄</span>
+                <div class="file-preview-info">
+                  <span id="preview-filename" class="preview-name">archivo.docx</span>
+                  <span id="preview-filesize" class="preview-size">0 KB</span>
+                </div>
+                <button type="button" id="btn-clear-selected-file" class="btn-clear-file" title="Quitar archivo">✕</button>
+              </div>
+            </div>
+
+            <div class="admin-form-grid">
+              <div class="form-field">
+                <label for="admin-file-title">Título o Nombre del Recurso *</label>
+                <input type="text" id="admin-file-title" placeholder="Ej: Plantilla Oficial de Guión Audiovisual" required class="admin-text-input">
+              </div>
+
+              <div class="form-field">
+                <label for="admin-file-category">Categoría del Material</label>
+                <select id="admin-file-category" class="admin-select-input">
+                  <option value="Plantilla de Trabajo">Plantilla de Trabajo</option>
+                  <option value="Guía Metodológica">Guía Metodológica</option>
+                  <option value="Caso de Estudio Real">Caso de Estudio Real</option>
+                  <option value="Lectura Complementaria">Lectura Complementaria</option>
+                  <option value="Normativa y Formato">Normativa y Formato</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label for="admin-file-desc">Descripción Breve o Instrucción para el Estudiante (opcional)</label>
+              <input type="text" id="admin-file-desc" placeholder="Ej: Utilicen este formato editable para estructurar los 7 minutos del video." class="admin-text-input">
+            </div>
+
+            <div class="admin-form-actions">
+              <button type="submit" id="btn-submit-upload" class="btn-clean primary" style="padding: 9px 20px; font-size: 0.88rem;">
+                <span>➕ Adjuntar y Publicar para los Visitantes</span>
+              </button>
+            </div>
+          </form>
+
+          <!-- Listado de Recursos Publicados -->
+          <div class="admin-resources-section">
+            <div class="admin-resources-head">
+              <h4>Archivos Publicados en este Módulo</h4>
+              <span id="admin-file-count" class="badge-count">0 archivos</span>
+            </div>
+
+            <div id="admin-files-list" class="admin-files-table-wrap">
+              <!-- Renderizado dinámico vía JS -->
+            </div>
+          </div>
+        </div>
+
+        <div class="bottom-flow-nav">
+          <button class="btn-clean" data-goto="view-reglas">
+            <span>← Reglas del Proyecto</span>
+          </button>
+          <button class="btn-clean primary" data-goto="view-parcial1">
+            <span>Ver Corte 1 (Vista Estudiante) →</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           PIE DE PÁGINA MINIMALISTA (DATOS DE LA UNIVERSIDAD Y CREADOR)
+           ========================================================= -->
+      <footer class="minimal-page-footer">
+        <div class="footer-meta-left">
+          <strong>Universidad Simón Bolívar</strong>
+          <span>·</span>
+          <span>Programa de Ingeniería de Sistemas</span>
+          <span>·</span>
+          <span>Sedes Barranquilla y Cúcuta</span>
+        </div>
+        <div class="footer-meta-right">
+          <span>Creado por: <strong>Kevin Eduardo García Moreno</strong></span>
+        </div>
+      </footer>
+
+    </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-notice"></div>
+
+  <!-- Script Interactivo -->
+  <script src="app.js"></script>
+</body>
+</html>
