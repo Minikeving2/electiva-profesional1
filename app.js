@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initAccordion();
   initMobileDrawer();
   initResourceManager();
+  initAdminAuth();
   initAmbientCanvas();
 });
 
@@ -884,6 +885,74 @@ async function initResourceManager() {
   // Initial renders
   await renderAdminModuleView(currentAdminModule);
   await renderStudentModuleViews();
+}
+
+/* -------------------------------------------------------------
+ * 10.B AUTENTICACIÓN ESTÁTICA DEL PANEL DOCENTE (LOGIN)
+ * ------------------------------------------------------------- */
+function initAdminAuth() {
+  const authGate = document.getElementById('admin-auth-gate');
+  const contentArea = document.getElementById('admin-content-area');
+  const loginForm = document.getElementById('admin-login-form');
+  const userInput = document.getElementById('admin-user-input');
+  const passInput = document.getElementById('admin-pass-input');
+  const errorMsg = document.getElementById('admin-auth-error');
+  const logoutBtn = document.getElementById('btn-admin-logout');
+
+  if (!authGate || !contentArea) return;
+
+  // Credenciales estáticas autorizadas: único usuario 'admin' con clave no obvia
+  const validUser = 'admin';
+  const validPass = 'UsbAdmin#2026';
+
+  function updateAuthState() {
+    const isLogged = sessionStorage.getItem('ova_admin_logged') === 'true';
+    if (isLogged) {
+      authGate.style.display = 'none';
+      contentArea.style.display = 'block';
+      if (typeof renderAdminModuleView === 'function') {
+        renderAdminModuleView(currentAdminModule);
+      }
+    } else {
+      authGate.style.display = 'block';
+      contentArea.style.display = 'none';
+      if (errorMsg) errorMsg.style.display = 'none';
+    }
+  }
+
+  // Manejo de envío de credenciales
+  if (loginForm) {
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const u = (userInput?.value || '').trim().toLowerCase();
+      const p = (passInput?.value || '').trim();
+
+      if (u === validUser && p === validPass) {
+        sessionStorage.setItem('ova_admin_logged', 'true');
+        if (errorMsg) errorMsg.style.display = 'none';
+        updateAuthState();
+        showToast('🔓 ¡Acceso autorizado! Bienvenido al Panel de Administración.');
+      } else {
+        if (errorMsg) errorMsg.style.display = 'block';
+        if (passInput) passInput.value = '';
+        passInput?.focus();
+      }
+    });
+  }
+
+  // Manejo de cierre de sesión
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      sessionStorage.removeItem('ova_admin_logged');
+      if (userInput) userInput.value = '';
+      if (passInput) passInput.value = '';
+      updateAuthState();
+      showToast('🔒 Sesión docente finalizada.');
+    });
+  }
+
+  // Estado inicial al cargar
+  updateAuthState();
 }
 
 /* -------------------------------------------------------------

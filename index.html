@@ -1290,24 +1290,64 @@
            VISTA: PANEL ADMINISTRADOR DOCENTE (SUBIDA DE ARCHIVOS)
            ===================================================== -->
       <section id="view-admin" class="view-panel">
-        <div class="section-title-wrap">
-          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
-            <span class="section-tag-small" style="color: var(--usb-green); background: var(--usb-green-subtle); border-color: var(--usb-green-border);">
-              Gestión Docente · Acceso Administrativo
-            </span>
-            <div class="admin-docente-badge">
-              <span>👨‍🏫</span>
-              <span>Docente: <strong>M.Sc. Alvaro Salamanca Landínez</strong></span>
-            </div>
+
+        <!-- COMPONENTE: ACCESO / LOGIN DOCENTE (PROTECCIÓN ESTÁTICA) -->
+        <div id="admin-auth-gate" class="admin-auth-card">
+          <div class="admin-auth-icon">🔐</div>
+          <div class="section-tag-small" style="color: var(--usb-green); background: var(--usb-green-subtle); border-color: var(--usb-green-border); margin-bottom: 0.75rem; display: inline-block;">
+            Acceso Restringido · Gestión Docente
           </div>
-          <h2 class="section-heading">Panel de Administración de Recursos de Apoyo</h2>
-          <p class="section-subtext">
-            Adjunta y publica material complementario, guías de trabajo, plantillas y casos de estudio para cada uno de los 3 módulos del proyecto. Los archivos subidos estarán disponibles de inmediato para su descarga por parte de los estudiantes.
+          <h2 class="admin-auth-title">Autenticación Docente</h2>
+          <p class="admin-auth-desc">
+            Ingrese sus credenciales de administración para publicar, gestionar y editar el material de apoyo de los 3 módulos.
           </p>
+
+          <form id="admin-login-form" class="admin-auth-form" onsubmit="return false;">
+            <div>
+              <label for="admin-user-input">Usuario Docente</label>
+              <input type="text" id="admin-user-input" class="admin-text-input" placeholder="admin" autocomplete="username" required>
+            </div>
+            <div>
+              <label for="admin-pass-input">Contraseña</label>
+              <input type="password" id="admin-pass-input" class="admin-text-input" placeholder="••••••••" autocomplete="current-password" required>
+            </div>
+            <button type="submit" id="btn-admin-login" class="btn-clean primary" style="width: 100%; justify-content: center; padding: 12px; margin-top: 6px;">
+              <span>Ingresar al Panel ➔</span>
+            </button>
+            <div id="admin-auth-error" style="display:none; color: #dc2626; font-size: 0.82rem; background: rgba(220, 38, 38, 0.08); border: 1px solid rgba(220, 38, 38, 0.2); padding: 8px 12px; border-radius: 8px; text-align: center;">
+              ⚠️ Usuario o contraseña incorrectos. Verifique sus datos.
+            </div>
+          </form>
+
+          <div class="admin-credentials-hint">
+            <span>💡 <strong>Credenciales de Acceso:</strong></span><br/>
+            <span>Usuario: <code>admin</code> &nbsp;|&nbsp; Contraseña: <code>UsbAdmin#2026</code></span>
+          </div>
         </div>
 
-        <!-- Selector de Módulo -->
-        <div class="admin-module-tabs">
+        <!-- CONTENIDO DEL PANEL DOCENTE (VISIBLE TRAS AUTENTICAR) -->
+        <div id="admin-content-area" style="display: none;">
+          <div class="section-title-wrap">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+              <span class="section-tag-small" style="color: var(--usb-green); background: var(--usb-green-subtle); border-color: var(--usb-green-border);">
+                Gestión Docente · Sesión Activa
+              </span>
+              <div class="admin-docente-badge">
+                <span>👨‍🏫</span>
+                <span>Docente: <strong>M.Sc. Alvaro Salamanca Landínez</strong></span>
+                <button type="button" id="btn-admin-logout" class="btn-logout" title="Cerrar Sesión de Administración">
+                  <span>Salir 🚪</span>
+                </button>
+              </div>
+            </div>
+            <h2 class="section-heading">Panel de Administración de Recursos de Apoyo</h2>
+            <p class="section-subtext">
+              Adjunta y publica material complementario, guías de trabajo, plantillas y casos de estudio para cada uno de los 3 módulos del proyecto. Los archivos subidos estarán disponibles de inmediato para su descarga por parte de los estudiantes.
+            </p>
+          </div>
+
+          <!-- Selector de Módulo -->
+          <div class="admin-module-tabs">
           <button class="admin-module-tab active" data-mod="1">
             <span class="tab-indicator green"></span>
             <div>
@@ -1404,6 +1444,7 @@
             </div>
           </div>
         </div>
+        </div><!-- Fin #admin-content-area -->
 
         <div class="bottom-flow-nav">
           <button class="btn-clean" data-goto="view-reglas">
